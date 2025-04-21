@@ -31,18 +31,22 @@ class OrderController extends Controller
     }
 
     public function store(StoreOrderRequest $request)
-    {
-        $data = $request->validated();
-        $concessions = $request->input('concessions', []);
-        $total_cost = $this->concessionRepository->all()->whereIn('id', $concessions)->sum('price');
-        $data['total_cost'] = $total_cost;
+{
+    $data = $request->validated();
+    $concessions = $request->input('concessions', []);
+    $total_cost = $this->concessionRepository->all()->whereIn('id', $concessions)->sum('price');
+    $data['total_cost'] = $total_cost;
 
-        $order = $this->orderRepository->create($data, $concessions);
+    $order = $this->orderRepository->create($data, $concessions);
 
-        SendOrderToKitchen::dispatch($order)->delay($data['send_to_kitchen_time']);
-
-        return redirect()->route('orders.index')->with('success', 'Order created successfully.');
+    // Check if the send time is in the past or now
+    $sendTime = \Carbon\Carbon::parse($data['send_to_kitchen_time']);
+    if ($sendTime->isPast()) {
+        $order->update(['status' => 'In-Progress']);
     }
+
+    return redirect()->route('orders.index')->with('success', 'Order created successfully.');
+}
 
     public function destroy($id)
     {
@@ -51,9 +55,9 @@ class OrderController extends Controller
     }
 
     public function sendToKitchen($id)
-    {
-        $order = $this->orderRepository->find($id);
-        SendOrderToKitchen::dispatch($order);
-        return redirect()->route('orders.index')->with('success', 'Order sent to kitchen.');
-    }
+{
+    $order = $this->orderRepository->find($id);
+    $order->update(['status' => 'In-Progress']);
+    return redirect()->route('orders.index')->with('success', 'Order sent to kitchen.');
+}
 }
