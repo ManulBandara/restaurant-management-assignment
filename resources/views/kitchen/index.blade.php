@@ -20,7 +20,7 @@
                 <tr>
                     <td>{{ $order->id }}</td>
                     <td>{{ $order->concessions->pluck('name')->implode(', ') }}</td>
-                    <td>${{ number_format($order->total_cost, 2) }}</td>
+                    <td>LKR{{ number_format($order->total_cost, 2) }}</td>
                     <td>
                         <span class="badge bg-{{ $order->status == 'In-Progress' ? 'info' : 'success' }}">
                             {{ $order->status }}

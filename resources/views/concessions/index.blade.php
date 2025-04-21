@@ -13,7 +13,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ $concession->name }}</h5>
                         <p class="card-text">{{ $concession->description ?? 'Yummy food!' }}</p>
-                        <p class="card-text"><strong>Price:</strong> ${{ number_format($concession->price, 2) }}</p>
+                        <p class="card-text"><strong>Price:</strong> LKR{{ number_format($concession->price, 2) }}</p>
                     </div>
                     <div class="card-footer d-flex justify-content-between">
                         <a href="{{ route('concessions.edit', $concession->id) }}" class="btn btn-sm btn-warning">Edit</a>

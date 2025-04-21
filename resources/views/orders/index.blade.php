@@ -21,7 +21,7 @@
                 <tr>
                     <td>{{ $order->id }}</td>
                     <td>{{ $order->concessions->pluck('name')->implode(', ') }}</td>
-                    <td>${{ number_format($order->total_cost, 2) }}</td>
+                    <td>LKR{{ number_format($order->total_cost, 2) }}</td>
                     <td>{{ $order->send_to_kitchen_time->format('Y-m-d H:i') }}</td>
                     <td>
                         <span class="badge bg-{{ $order->status == 'Pending' ? 'warning' : ($order->status == 'In-Progress' ? 'info' : 'success') }}">
